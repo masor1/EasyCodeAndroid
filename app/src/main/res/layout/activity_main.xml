@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/agreementTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/dimen_small" />
+    android:background="@color/grey"
+    android:padding="@dimen/dimen_small"
+    app:drawableTopCompat="@android:drawable/ic_dialog_alert"
+    tools:text="@string/agreement_full_text"
+    app:drawableTint="@color/yellow" />
