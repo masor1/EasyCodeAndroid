@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">HW</string>
+    <string name="hello">Hello World! This is\'t my first project on Android ever and I am going to enjoy it!!!</string>
+    <string name="agreement_full_text">By pressing next button you confirm the agreement and privacy policy</string>
+    <string name="confidential_info">agreement</string>
+    <string name="privacy_policy">privacy policy</string>
+</resources>

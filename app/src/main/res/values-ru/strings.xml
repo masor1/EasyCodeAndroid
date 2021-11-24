@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ПМ</string>
+    <string name="hello">Привет мир! Это не первый мой проект на Андроид, зацените!!!</string>
+    <string name="agreement_full_text">Нажимая на кнопку вы подтверждаете что ознакомились с
+        условиями использования и политикой конфиденциальности</string>
+    <string name="confidential_info">условиями использования</string>
+    <string name="privacy_policy">политикой конфиденциальности</string>
+</resources>
