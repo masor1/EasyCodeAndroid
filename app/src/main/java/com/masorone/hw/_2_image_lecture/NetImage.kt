@@ -1,4 +1,4 @@
-package com.masorone.hw
+package com.masorone.hw._2_image_lecture
 
 import android.graphics.BitmapFactory
 import java.net.URL

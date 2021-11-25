@@ -7,4 +7,7 @@
     <string name="confidential_info">условиями использования</string>
     <string name="privacy_policy">политикой конфиденциальности</string>
     <string name="ic_description">описание иконки</string>
+    <string name="login">Логин</string>
+    <string name="invalid_email_message">Некорректная почта</string>
+    <string name="valid_email_message">Корректная почта</string>
 </resources>

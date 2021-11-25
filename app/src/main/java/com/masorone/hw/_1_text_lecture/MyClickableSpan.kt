@@ -1,4 +1,4 @@
-package com.masorone.hw
+package com.masorone.hw._1_text_lecture
 
 import android.graphics.Color
 import android.text.TextPaint

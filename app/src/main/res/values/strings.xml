@@ -5,4 +5,7 @@
     <string name="confidential_info">agreement</string>
     <string name="privacy_policy">privacy policy</string>
     <string name="ic_description">ic_description</string>
+    <string name="login">Login</string>
+    <string name="invalid_email_message">Invalid email</string>
+    <string name="valid_email_message">Valid email</string>
 </resources>
