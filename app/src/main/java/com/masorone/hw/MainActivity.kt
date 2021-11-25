@@ -11,6 +11,7 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import com.google.android.material.snackbar.Snackbar
@@ -18,15 +19,21 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity() {
 
     private lateinit var agreementTextView: TextView
+    private lateinit var icImageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        init()
+        initImageView()
     }
 
-    private fun init() {
-        agreementTextView = findViewById(R.id.agreementTextView)
+    private fun initImageView() {
+//        icImageView = findViewById(R.id.iconImageView)
+//        icImageView.setImageResource(R.drawable.android_logo)
+    }
+
+    private fun initTextView() {
+//        agreementTextView = findViewById(R.id.agreementTextView)
         val fullText = getString(R.string.agreement_full_text)
         val confidential = getString(R.string.confidential_info)
         val policy = getString(R.string.privacy_policy)
