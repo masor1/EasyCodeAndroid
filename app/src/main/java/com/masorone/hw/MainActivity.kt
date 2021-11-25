@@ -1,6 +1,7 @@
 package com.masorone.hw
 
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var agreementTextView: TextView
     private lateinit var icImageView: ImageView
 
+    private companion object {
+        const val URL =
+            "https://zavistnik.com/wp-content/uploads/2020/03/Android-kursy-zastavka.jpg"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,8 +34,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initImageView() {
-//        icImageView = findViewById(R.id.iconImageView)
-//        icImageView.setImageResource(R.drawable.android_logo)
+        icImageView = findViewById(R.id.iconImageView)
+        val netImage = NetImage(URL, object : ImageCallback {
+            override fun success(bitmap: Bitmap) {
+                icImageView.setImageBitmap(bitmap)
+            }
+
+            override fun failed() {
+                Snackbar.make(icImageView, "failed", Snackbar.LENGTH_SHORT).show()
+            }
+        })
+        netImage.start()
     }
 
     private fun initTextView() {

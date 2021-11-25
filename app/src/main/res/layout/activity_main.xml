@@ -2,9 +2,7 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/iconImageView"
-    android:layout_gravity="center"
-    android:layout_width="@dimen/image_size"
-    android:layout_height="@dimen/image_size"
-    android:contentDescription="@string/ic_description"
-    android:src="@drawable/ic_main"
-    app:tint="@color/green" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="fitXY"
+    android:contentDescription="@string/ic_description" />
