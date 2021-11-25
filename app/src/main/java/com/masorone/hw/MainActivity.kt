@@ -1,20 +1,19 @@
 package com.masorone.hw
 
+import android.content.Context
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
-import android.text.TextPaint
 import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorRes
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 
@@ -36,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initImageView() {
         icImageView = findViewById(R.id.iconImageView)
-        icImageView.loadPicasso(URL)
+        icImageView.loadWithGlide(URL)
     }
 
     private fun initTextView() {
@@ -76,12 +75,20 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-fun ImageView.loadPicasso(url: String) {
+fun ImageView.loadWithPicasso(url: String) {
     Picasso.get().load(url).centerInside()
         .resize(720, 1280)
         .placeholder(android.R.drawable.ic_media_pause)
         .error(android.R.drawable.ic_dialog_alert)
         .into(this)
+}
+
+fun ImageView.loadWithGlide(url: String) {
+    Glide.with(this).load(url).centerInside()
+        .apply(RequestOptions().override(720,1280))
+        .placeholder(android.R.drawable.ic_media_pause)
+        .error(android.R.drawable.ic_dialog_alert)
+        .into(this);
 }
 
 fun TextView.setColor(@ColorRes colorResId: Int, theme: Resources.Theme? = null) {
