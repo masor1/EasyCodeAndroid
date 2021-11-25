@@ -36,12 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initImageView() {
         icImageView = findViewById(R.id.iconImageView)
-
-        Picasso.get().load("https://images4.alphacoders.com/109/1095230.jpg").centerCrop()
-            .resize(720, 1280)
-            .placeholder(android.R.drawable.ic_media_pause)
-            .error(android.R.drawable.ic_dialog_alert)
-            .into(icImageView)
+        icImageView.loadPicasso(URL)
     }
 
     private fun initTextView() {
@@ -82,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 fun ImageView.loadPicasso(url: String) {
-    Picasso.get().load(url).centerCrop()
+    Picasso.get().load(url).centerInside()
         .resize(720, 1280)
         .placeholder(android.R.drawable.ic_media_pause)
         .error(android.R.drawable.ic_dialog_alert)
