@@ -52,6 +52,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        initTextInputAndButtons()
+    }
+
     private fun setText(text: String) {
         textInputEditText.removeTextChangedListener(textWatcher)
         textInputEditText.setTextCorrectly(text)
@@ -61,12 +67,6 @@ class MainActivity : AppCompatActivity() {
     private companion object {
         const val URL =
             "https://zavistnik.com/wp-content/uploads/2020/03/Android-kursy-zastavka.jpg"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        initTextInputAndButtons()
     }
 
     private fun initTextInputAndButtons() {
