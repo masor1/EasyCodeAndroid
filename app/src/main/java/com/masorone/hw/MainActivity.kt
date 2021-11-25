@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,16 +36,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initImageView() {
         icImageView = findViewById(R.id.iconImageView)
-        val netImage = NetImage(URL, object : ImageCallback {
-            override fun success(bitmap: Bitmap) {
-                icImageView.setImageBitmap(bitmap)
-            }
 
-            override fun failed() {
-                Snackbar.make(icImageView, "failed", Snackbar.LENGTH_SHORT).show()
-            }
-        })
-        netImage.start()
+        Picasso.get().load("https://images4.alphacoders.com/109/1095230.jpg").centerCrop()
+            .resize(720, 1280)
+            .placeholder(android.R.drawable.ic_media_pause)
+            .error(android.R.drawable.ic_dialog_alert)
+            .into(icImageView)
     }
 
     private fun initTextView() {
@@ -82,6 +79,14 @@ class MainActivity : AppCompatActivity() {
             highlightColor = Color.parseColor("#ACACAC")
         }
     }
+}
+
+fun ImageView.loadPicasso(url: String) {
+    Picasso.get().load(url).centerCrop()
+        .resize(720, 1280)
+        .placeholder(android.R.drawable.ic_media_pause)
+        .error(android.R.drawable.ic_dialog_alert)
+        .into(this)
 }
 
 fun TextView.setColor(@ColorRes colorResId: Int, theme: Resources.Theme? = null) {
