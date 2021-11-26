@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var icImageView: ImageView
     private lateinit var textInputLayout: TextInputLayout
     private lateinit var textInputEditText: TextInputEditText
-
     private val textWatcher: TextWatcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) {
             super.afterTextChanged(s)
@@ -72,8 +71,8 @@ class MainActivity : AppCompatActivity() {
     private fun initTextInputAndButtons() {
         textInputLayout = findViewById(R.id.textInputLayout)
         textInputEditText = textInputLayout.editText as TextInputEditText
-
         textInputEditText.addTextChangedListener(textWatcher)
+
     }
 
     private fun initImageView() {
