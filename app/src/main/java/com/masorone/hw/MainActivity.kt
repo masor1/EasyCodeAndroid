@@ -13,9 +13,7 @@ import android.text.method.LinkMovementMethod
 import android.util.Patterns.EMAIL_ADDRESS
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.ColorRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -34,6 +32,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var textInputLayout: TextInputLayout
     private lateinit var textInputEditText: TextInputEditText
     private lateinit var loginButton: Button
+    private lateinit var checkBox: CheckBox
+    private lateinit var textCheckBox: TextView
+    private lateinit var progressBar: ProgressBar
     private val textWatcher: TextWatcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) {
             super.afterTextChanged(s)
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initTextInputAndButtons()
+        initCheckBox()
     }
 
     private fun setText(text: String) {
@@ -60,6 +61,58 @@ class MainActivity : AppCompatActivity() {
     private companion object {
         const val URL =
             "https://zavistnik.com/wp-content/uploads/2020/03/Android-kursy-zastavka.jpg"
+    }
+
+    private fun initCheckBox() {
+        checkBox = findViewById(R.id.checkBox)
+        loginButton = findViewById(R.id.loginButton)
+        textCheckBox = findViewById(R.id.textCheckBox)
+        progressBar = findViewById(R.id.progressBar)
+        textInputEditText = findViewById(R.id.textInputEditText)
+
+        val fullText = getString(R.string.agreement_full_text)
+        val confidential = getString(R.string.confidential_info)
+        val policy = getString(R.string.privacy_policy)
+        val spannableString = SpannableString(fullText)
+        val confidentialClickable = MyClickableSpan {
+            Snackbar.make(it, "Go to link 1", Snackbar.LENGTH_SHORT).show()
+        }
+        val policyClickable = MyClickableSpan {
+            Snackbar.make(it, "Go to link 2", Snackbar.LENGTH_SHORT).show()
+        }
+
+        spannableString.setSpan(
+            confidentialClickable,
+            fullText.indexOf(confidential),
+            fullText.indexOf(confidential) + confidential.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        spannableString.setSpan(
+            policyClickable,
+            fullText.indexOf(policy),
+            fullText.indexOf(policy) + policy.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        textCheckBox.run {
+            text = spannableString
+            movementMethod = LinkMovementMethod.getInstance()
+            highlightColor = Color.parseColor("#ACACAC")
+        }
+
+        loginButton.isEnabled = false
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            loginButton.isEnabled = isChecked
+        }
+        loginButton.setOnClickListener {
+            if (EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()) {
+                hideKeyboard(textInputEditText)
+                loginButton.isEnabled = false
+                progressBar.visibility = View.VISIBLE
+                Snackbar.make(loginButton, "Go to postLogin", Snackbar.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun initTextInputAndButtons() {
