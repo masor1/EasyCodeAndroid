@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var checkBox: CheckBox
     private lateinit var textCheckBox: TextView
     private lateinit var progressBar: ProgressBar
+    private lateinit var contentLayout: View
     private val textWatcher: TextWatcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) {
             super.afterTextChanged(s)
@@ -69,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         textCheckBox = findViewById(R.id.textCheckBox)
         progressBar = findViewById(R.id.progressBar)
         textInputEditText = findViewById(R.id.textInputEditText)
+        contentLayout = findViewById(R.id.contentLayout)
 
         val fullText = getString(R.string.agreement_full_text)
         val confidential = getString(R.string.confidential_info)
@@ -108,8 +112,13 @@ class MainActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             if (EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()) {
                 hideKeyboard(textInputEditText)
-                loginButton.isEnabled = false
+                contentLayout.visibility = View.GONE
                 progressBar.visibility = View.VISIBLE
+                Handler(Looper.myLooper()!!).postDelayed({
+                    contentLayout.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                }, 3000)
+
                 Snackbar.make(loginButton, "Go to postLogin", Snackbar.LENGTH_LONG).show()
             }
         }
