@@ -11,4 +11,6 @@
     <string name="invalid_email_message">Некорректная почта</string>
     <string name="valid_email_message">Корректная почта</string>
     <string name="password">Пароль</string>
+    <string name="attention">Внимание</string>
+    <string name="service_is_unavailable">Сервис временно недоступен</string>
 </resources>

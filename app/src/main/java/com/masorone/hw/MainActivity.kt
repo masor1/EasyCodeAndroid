@@ -1,5 +1,6 @@
 package com.masorone.hw
 
+import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
@@ -13,12 +14,15 @@ import android.text.Spanned
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.util.Patterns.EMAIL_ADDRESS
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.ColorRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -37,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var checkBox: CheckBox
     private lateinit var textCheckBox: TextView
     private lateinit var progressBar: ProgressBar
-    private lateinit var contentLayout: View
+//    private lateinit var contentLayout: View
     private val textWatcher: TextWatcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) {
             super.afterTextChanged(s)
@@ -72,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         textCheckBox = findViewById(R.id.textCheckBox)
         progressBar = findViewById(R.id.progressBar)
         textInputEditText = findViewById(R.id.textInputEditText)
-        contentLayout = findViewById(R.id.contentLayout)
+        val contentLayout = findViewById<View>(R.id.contentLayout)
 
         val fullText = getString(R.string.agreement_full_text)
         val confidential = getString(R.string.confidential_info)
@@ -117,6 +121,14 @@ class MainActivity : AppCompatActivity() {
                 Handler(Looper.myLooper()!!).postDelayed({
                     contentLayout.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
+                    val dialog = Dialog(this)
+                    val view = LayoutInflater.from(this).inflate(R.layout.dialog, contentLayout as ViewGroup, false)
+                    dialog.setCancelable(false)
+                    view.findViewById<View>(R.id.closeButton).setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.setContentView(view)
+                    dialog.show()
                 }, 3000)
 
                 Snackbar.make(loginButton, "Go to postLogin", Snackbar.LENGTH_LONG).show()

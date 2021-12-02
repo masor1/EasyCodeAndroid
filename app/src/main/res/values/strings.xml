@@ -9,4 +9,7 @@
     <string name="invalid_email_message">Invalid email</string>
     <string name="valid_email_message">Valid email</string>
     <string name="password">Password</string>
+    <string name="attention">Attation</string>
+    <string name="service_is_unavailable">Service is unavailable</string>
+    <string name="close_button">close button</string>
 </resources>
