@@ -10,9 +10,12 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
+import android.util.Patterns.EMAIL_ADDRESS
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -22,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.masorone.hw._1_text_lecture.MyClickableSpan
 import com.masorone.hw._3_text_input_and_buttons.SimpleTextWatcher
 import com.squareup.picasso.Picasso
+import java.util.regex.Pattern
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,21 +33,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var icImageView: ImageView
     private lateinit var textInputLayout: TextInputLayout
     private lateinit var textInputEditText: TextInputEditText
+    private lateinit var loginButton: Button
     private val textWatcher: TextWatcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) {
             super.afterTextChanged(s)
             val input = s.toString()
-            val valid = android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()
-            textInputLayout.isErrorEnabled = !valid
-            val error = if (valid) "" else getString(R.string.invalid_email_message)
-            textInputLayout.error = error
-            if (valid)
-                Toast.makeText(
-                    this@MainActivity,
-                    R.string.valid_email_message,
-                    Toast.LENGTH_LONG
-                ).show()
-
             if (input.endsWith("@g")) {
                 val fullMail = "${input}mail.com"
                 setText(fullMail)
@@ -71,8 +65,21 @@ class MainActivity : AppCompatActivity() {
     private fun initTextInputAndButtons() {
         textInputLayout = findViewById(R.id.textInputLayout)
         textInputEditText = textInputLayout.editText as TextInputEditText
-        textInputEditText.addTextChangedListener(textWatcher)
-
+        loginButton = findViewById(R.id.loginButton)
+        textInputEditText.listenChanges {
+            textInputLayout.isErrorEnabled = false
+            loginButton.isEnabled = true
+        }
+        loginButton.setOnClickListener {
+            if (EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()){
+                hideKeyboard(textInputEditText)
+                loginButton.isEnabled = false
+                Snackbar.make(loginButton, "Go to postLogin", Snackbar.LENGTH_LONG).show()
+            } else {
+                textInputLayout.isErrorEnabled = true
+                textInputLayout.error = getString(R.string.invalid_email_message)
+            }
+        }
     }
 
     private fun initImageView() {
@@ -115,6 +122,20 @@ class MainActivity : AppCompatActivity() {
             highlightColor = Color.parseColor("#ACACAC")
         }
     }
+}
+
+fun AppCompatActivity.hideKeyboard(view: View) {
+    val imm = this.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun TextInputEditText.listenChanges(block: (text: String) -> Unit) {
+    addTextChangedListener(object : SimpleTextWatcher() {
+        override fun afterTextChanged(s: Editable?) {
+            super.afterTextChanged(s)
+            block.invoke(s.toString())
+        }
+    })
 }
 
 fun TextInputEditText.setTextCorrectly(text: CharSequence) {

@@ -10,4 +10,5 @@
     <string name="login">Логин</string>
     <string name="invalid_email_message">Некорректная почта</string>
     <string name="valid_email_message">Корректная почта</string>
+    <string name="password">Пароль</string>
 </resources>
