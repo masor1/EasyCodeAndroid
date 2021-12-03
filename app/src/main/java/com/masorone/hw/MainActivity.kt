@@ -38,15 +38,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var textCheckBox: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var contentLayout: ViewGroup
+
     private companion object {
         private const val TAG = "MainActivity"
         const val INITIAL = 0
         const val PROGRESS = 1
         const val SUCCESS = 2
         const val FAILED = 3
+        const val KEY_STATE = "screenState"
         const val URL =
             "https://zavistnik.com/wp-content/uploads/2020/03/Android-kursy-zastavka.jpg"
     }
+
     private var state = INITIAL
     private val textWatcher: TextWatcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) {
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         savedInstanceState?.let {
-            state = it.getInt("screenState")
+            state = it.getInt(KEY_STATE)
         }
         Log.d(TAG, "onCreate -> ${savedInstanceState == null}\nstate -> $state")
         initCheckBox()
@@ -68,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("screenState", state)
+        outState.putInt(KEY_STATE, state)
     }
 
     private fun setText(text: String) {
@@ -134,7 +137,8 @@ class MainActivity : AppCompatActivity() {
                     contentLayout.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
                     val dialog = Dialog(this)
-                    val view = LayoutInflater.from(this).inflate(R.layout.dialog, contentLayout, false)
+                    val view =
+                        LayoutInflater.from(this).inflate(R.layout.dialog, contentLayout, false)
                     dialog.setCancelable(false)
                     view.findViewById<View>(R.id.closeButton).setOnClickListener {
                         state = INITIAL
@@ -163,7 +167,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         loginButton.setOnClickListener {
-            if (EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()){
+            if (EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()) {
                 hideKeyboard(textInputEditText)
                 loginButton.isEnabled = false
                 Snackbar.make(loginButton, "Go to postLogin", Snackbar.LENGTH_LONG).show()
