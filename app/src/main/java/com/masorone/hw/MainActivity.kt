@@ -41,6 +41,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var textCheckBox: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var contentLayout: ViewGroup
+    private companion object {
+        private const val TAG = "MainActivity"
+        const val INITIAL = 0
+        const val PROGRESS = 1
+        const val SUCCESS = 2
+        const val FAILED = 3
+        const val URL =
+            "https://zavistnik.com/wp-content/uploads/2020/03/Android-kursy-zastavka.jpg"
+    }
+    private var state = INITIAL
     private val textWatcher: TextWatcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) {
             super.afterTextChanged(s)
@@ -52,7 +62,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.d(TAG, "onCreate -> ${savedInstanceState == null}")
+        if (savedInstanceState == null)
+            state = SUCCESS
+        Log.d(TAG, "onCreate -> ${savedInstanceState == null}\nstate -> $state")
         initCheckBox()
     }
 
@@ -60,12 +72,6 @@ class MainActivity : AppCompatActivity() {
         textInputEditText.removeTextChangedListener(textWatcher)
         textInputEditText.setTextCorrectly(text)
         textInputEditText.addTextChangedListener(textWatcher)
-    }
-
-    private companion object {
-        private const val TAG = "MainActivity"
-        const val URL =
-            "https://zavistnik.com/wp-content/uploads/2020/03/Android-kursy-zastavka.jpg"
     }
 
     private fun initCheckBox() {
@@ -114,23 +120,21 @@ class MainActivity : AppCompatActivity() {
             loginButton.isEnabled = isChecked
         }
 
-//        textInputEditText.listenChanges {
-//            Log.d(TAG, "Changed -> $it")
-//            textInputLayout.isErrorEnabled = false
-//        }
-
         loginButton.setOnClickListener {
             if (EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()) {
                 hideKeyboard(textInputEditText)
                 contentLayout.visibility = View.GONE
                 progressBar.visibility = View.VISIBLE
+                state = PROGRESS
                 Handler(Looper.myLooper()!!).postDelayed({
+                    state = FAILED
                     contentLayout.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
                     val dialog = Dialog(this)
                     val view = LayoutInflater.from(this).inflate(R.layout.dialog, contentLayout, false)
                     dialog.setCancelable(false)
                     view.findViewById<View>(R.id.closeButton).setOnClickListener {
+                        state = INITIAL
                         dialog.dismiss()
                     }
                     dialog.setContentView(view)
@@ -217,6 +221,11 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         Log.d(TAG, "onPause")
         textInputEditText.removeTextChangedListener(textWatcher)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onRestart")
     }
 
     override fun onResume() {
