@@ -13,6 +13,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
 import android.view.LayoutInflater
 import android.view.View
@@ -22,14 +23,12 @@ import android.widget.*
 import androidx.annotation.ColorRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.masorone.hw._1_text_lecture.MyClickableSpan
 import com.masorone.hw._3_text_input_and_buttons.SimpleTextWatcher
 import com.squareup.picasso.Picasso
-import java.util.regex.Pattern
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,21 +40,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var checkBox: CheckBox
     private lateinit var textCheckBox: TextView
     private lateinit var progressBar: ProgressBar
-//    private lateinit var contentLayout: View
+    private lateinit var contentLayout: ViewGroup
     private val textWatcher: TextWatcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) {
             super.afterTextChanged(s)
-            val input = s.toString()
-            if (input.endsWith("@g")) {
-                val fullMail = "${input}mail.com"
-                setText(fullMail)
-            }
+            Log.d(TAG, "changed -> ${s.toString()}")
+            textInputLayout.isErrorEnabled = false
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate -> ${savedInstanceState == null}")
         initCheckBox()
     }
 
@@ -66,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private companion object {
+        private const val TAG = "MainActivity"
         const val URL =
             "https://zavistnik.com/wp-content/uploads/2020/03/Android-kursy-zastavka.jpg"
     }
@@ -76,7 +74,8 @@ class MainActivity : AppCompatActivity() {
         textCheckBox = findViewById(R.id.textCheckBox)
         progressBar = findViewById(R.id.progressBar)
         textInputEditText = findViewById(R.id.textInputEditText)
-        val contentLayout = findViewById<View>(R.id.contentLayout)
+        textInputLayout = findViewById(R.id.textInputLayout)
+        contentLayout = findViewById(R.id.contentLayout)
 
         val fullText = getString(R.string.agreement_full_text)
         val confidential = getString(R.string.confidential_info)
@@ -110,9 +109,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         loginButton.isEnabled = false
+
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             loginButton.isEnabled = isChecked
         }
+
+//        textInputEditText.listenChanges {
+//            Log.d(TAG, "Changed -> $it")
+//            textInputLayout.isErrorEnabled = false
+//        }
+
         loginButton.setOnClickListener {
             if (EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()) {
                 hideKeyboard(textInputEditText)
@@ -122,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                     contentLayout.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
                     val dialog = Dialog(this)
-                    val view = LayoutInflater.from(this).inflate(R.layout.dialog, contentLayout as ViewGroup, false)
+                    val view = LayoutInflater.from(this).inflate(R.layout.dialog, contentLayout, false)
                     dialog.setCancelable(false)
                     view.findViewById<View>(R.id.closeButton).setOnClickListener {
                         dialog.dismiss()
@@ -132,6 +138,9 @@ class MainActivity : AppCompatActivity() {
                 }, 3000)
 
                 Snackbar.make(loginButton, "Go to postLogin", Snackbar.LENGTH_LONG).show()
+            } else {
+                textInputLayout.isErrorEnabled = true
+                textInputLayout.error = getString(R.string.invalid_email_message)
             }
         }
     }
@@ -140,10 +149,12 @@ class MainActivity : AppCompatActivity() {
         textInputLayout = findViewById(R.id.textInputLayout)
         textInputEditText = textInputLayout.editText as TextInputEditText
         loginButton = findViewById(R.id.loginButton)
+
         textInputEditText.listenChanges {
             textInputLayout.isErrorEnabled = false
             loginButton.isEnabled = true
         }
+
         loginButton.setOnClickListener {
             if (EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()){
                 hideKeyboard(textInputEditText)
@@ -195,6 +206,28 @@ class MainActivity : AppCompatActivity() {
             movementMethod = LinkMovementMethod.getInstance()
             highlightColor = Color.parseColor("#ACACAC")
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause")
+        textInputEditText.removeTextChangedListener(textWatcher)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume")
+        textInputEditText.addTextChangedListener(textWatcher)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy")
     }
 }
 
