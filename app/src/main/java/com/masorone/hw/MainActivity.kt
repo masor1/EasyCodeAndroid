@@ -3,11 +3,8 @@ package com.masorone.hw
 import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
-import android.os.Build
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
@@ -62,10 +59,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (savedInstanceState == null)
-            state = SUCCESS
+        savedInstanceState?.let {
+            state = it.getInt("screenState")
+        }
         Log.d(TAG, "onCreate -> ${savedInstanceState == null}\nstate -> $state")
         initCheckBox()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("screenState", state)
     }
 
     private fun setText(text: String) {
