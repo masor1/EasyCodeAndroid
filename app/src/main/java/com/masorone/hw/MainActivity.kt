@@ -136,16 +136,7 @@ class MainActivity : AppCompatActivity() {
                     state = FAILED
                     contentLayout.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
-                    val dialog = Dialog(this)
-                    val view =
-                        LayoutInflater.from(this).inflate(R.layout.dialog, contentLayout, false)
-                    dialog.setCancelable(false)
-                    view.findViewById<View>(R.id.closeButton).setOnClickListener {
-                        state = INITIAL
-                        dialog.dismiss()
-                    }
-                    dialog.setContentView(view)
-                    dialog.show()
+                    showDialog(contentLayout)
                 }, 3000)
 
                 Snackbar.make(loginButton, "Go to postLogin", Snackbar.LENGTH_LONG).show()
@@ -154,6 +145,26 @@ class MainActivity : AppCompatActivity() {
                 textInputLayout.error = getString(R.string.invalid_email_message)
             }
         }
+        when (state) {
+            FAILED -> showDialog(contentLayout)
+            SUCCESS -> {
+                Snackbar.make(contentLayout, "Success", Snackbar.LENGTH_LONG).show()
+                state = INITIAL
+            }
+        }
+    }
+
+    private fun showDialog(viewGroup: ViewGroup) {
+        val dialog = Dialog(this)
+        val view =
+            LayoutInflater.from(this).inflate(R.layout.dialog, viewGroup, false)
+        dialog.setCancelable(false)
+        view.findViewById<View>(R.id.closeButton).setOnClickListener {
+            state = INITIAL
+            dialog.dismiss()
+        }
+        dialog.setContentView(view)
+        dialog.show()
     }
 
     private fun initTextInputAndButtons() {
